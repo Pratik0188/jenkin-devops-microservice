@@ -1,11 +1,13 @@
 pipeline {
-    //agent {docker{ image: 'maven:3.6.3'}}
-	agent {docekr {image:'node:13.8'}}
+    agent {
+        docker {
+            image 'node:13.8'
+        }
+    }
     stages {
         stage('Build') {
             steps {
-				//sh "mvn --version"
-				sh 'node --version'
+                sh 'node --version'
                 echo "Build"
             }
         }
@@ -19,16 +21,16 @@ pipeline {
                 echo "Integration test"
             }
         }
-    } 
-	post {
-		always {
-			echo 'I am awesome. I run always'
-		}
-		success{
-			echo 'I run when you are successful'
-		}
-		failure{
-			echo 'I run when you fail'
-		}
-	}
+    }
+    post {
+        always {
+            echo 'I am awesome. I run always'
+        }
+        success {
+            echo 'I run when you are successful'
+        }
+        failure {
+            echo 'I run when you fail'
+        }
+    }
 }
