@@ -33,7 +33,30 @@ pipeline {
         }
         stage('Integration Test') {
             steps {
+                sh "mvn package -DskipTests"
+            }
+        }
+        stage('Package') {
+            steps {
                 sh "mvn failsafe:integration-test failsafe:verify"
+            }
+        }
+        stage('Build Docker Image'){
+            steps{
+              //"docker build -t pratik188/jenkin-devops-microservice:$env.BUILD_TAG"
+              script{
+                dockerImage= docker.build("pratik188/jenkin-devops-microservice:${env.BUILD_TAG}")
+              } 
+            }
+        }
+        stage('Build Docker Push'){
+            steps{
+                script{
+                    docker.withRegistry('','dockerhub') {
+                    dockerImage.push();
+                    dockerImage.push('latest');
+                    }
+                }
             }
         }
     }
